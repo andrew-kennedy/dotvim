@@ -49,7 +49,7 @@ set synmaxcol=2048
 " Color scheme and 256 color terminal support (disable background color erase).
 "colorscheme xoria256
 if &term =~ '256color'
-        set t_ut=
+        set t_ut=256
 endif
 
 " Highlight current line, but only in the active window.
