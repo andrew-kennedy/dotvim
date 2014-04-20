@@ -86,8 +86,8 @@ set hidden
 set cpoptions=cesB$
 
 " Status line options.
-set laststatus=2
-set statusline=\ %{fugitive#statusline()}\ %f\ %m\ %r%=%l/%L\ <%c>\ [%p%%]\ 
+"set laststatus=2
+"set statusline=\ %{fugitive#statusline()}\ %f\ %m\ %r%=%l/%L\ <%c>\ [%p%%]\ 
 
 " Lazy redraw for efficiency.
 "set lazyredraw
@@ -121,6 +121,22 @@ endif
 " =============================================================================
 "       KEY MAPPINGS 
 " =============================================================================
+
+" Disable Arrow keys in normal mode
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+
+" Disable Arrow keys in Insert mode
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+
+" Make typing commands not require pressing shift
+map ; :
+noremap ;; ;
 
 " Toggle paste mode.
 nmap <silent> ,p :set invpaste<CR>:set hls?<CR>
@@ -180,7 +196,7 @@ nmap <silent> ,ul :t.\|s/./=/g\|set nohls<CR>
 "nmap <silent> ,da :exec "1," . bufnr('$') . "bd"<CR>
 
 " Map jj to escape in insert mode.
-" imap jj <ESC>
+imap jj <ESC>
 
 " =============================================================================
 "       NERD TREE SETTINGS
@@ -228,4 +244,4 @@ let g:indentLine_char = '│'
 " =============================================================================
 
 " Don't conceal arrows with fancy UTF-8 versions.
-let g:no_rust_conceal = 1
+let g:no_rust_conceal = 2
