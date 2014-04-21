@@ -6,6 +6,9 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+" Vim requires POSIX compliant shell
+set shell=/bin/bash
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -20,8 +23,40 @@ Plugin 'gmarik/vundle'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Lokaltog/vim-easymotion'
-Plugin 'tpope/vim-rails.git'
+Plugin 'tpope/vim-rails'
+Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdtree'
+Plugin 'bling/vim-airline'
+Plugin 'airblade/vim-gitgutter'
 
+" Vundle Colorschemes
+Plugin 'tomasr/molokai'
+Plugin 'xoria256.vim'
+Plugin 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
+Plugin 'chriskempson/base16-vim'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'jellybeans.vim'
+
+" =============================================================================
+"       EXAMPLE VUNDLE PLUGINS FOR REFERENCE
+" =============================================================================
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between here and filetype plugin indent on.
+" scripts on GitHub repos
+    " Plugin 'tpope/vim-fugitive'
+    " Plugin 'Lokaltog/vim-easymotion'
+    " Plugin 'tpope/vim-rails.git'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+    " Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" scripts from http://vim-scripts.org/vim/scripts.html
+    " Plugin 'L9'
+    " Plugin 'FuzzyFinder'
+" scripts not on GitHub
+    " Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+    " Plugin 'file:///home/gmarik/path/to/plugin'
 
 " =============================================================================
 "       VIM SETTINGS
@@ -41,16 +76,16 @@ set shiftwidth=4
 set expandtab
 set smarttab
 
+" 256 color terminal support
+if &term =~ '256color'
+    set t_Co=256
+endif
+set background=light
+
 " Syntax highlighting options.
 syntax on
-set background=dark
+colorscheme xoria256
 set synmaxcol=2048
-
-" Color scheme and 256 color terminal support (disable background color erase).
-"colorscheme xoria256
-if &term =~ '256color'
-        set t_ut=256
-endif
 
 " Highlight current line, but only in the active window.
 augroup CursorLine
@@ -82,15 +117,18 @@ set backspace=indent,eol,start
 " Allow hidden buffers so unsaved buffers can go in the background
 set hidden
 
+" Allow for more characters to be sent to the terminal for faster redraw
+set ttyfast
+
 " Use a $ to mark the end of a work when changing it.
 set cpoptions=cesB$
 
 " Status line options.
-"set laststatus=2
-"set statusline=\ %{fugitive#statusline()}\ %f\ %m\ %r%=%l/%L\ <%c>\ [%p%%]\ 
+set laststatus=2
+set statusline=\ %{fugitive#statusline()}\ %f\ %m\ %r%=%l/%L\ <%c>\ [%p%%]\ 
 
-" Lazy redraw for efficiency.
-"set lazyredraw
+" Doesn't redraw during commands like macros that aren't typed (efficient)
+set lazyredraw
 
 " Show the command helper and current mode.
 set showcmd
@@ -117,6 +155,10 @@ set nowrap
 if exists('+colorcolumn')
     set cc=80
 endif
+
+" Remove trailing whitespace on save of certain filetypes
+autocmd FileType c,cpp,java,php,python,ruby,clojure,lisp
+    \ autocmd BufWritePre <buffer> :%s/\s\+$//e
 
 " =============================================================================
 "       KEY MAPPINGS 
@@ -197,7 +239,17 @@ nmap <silent> ,ul :t.\|s/./=/g\|set nohls<CR>
 
 " Map jj to escape in insert mode.
 imap jj <ESC>
+" =============================================================================
+"       COLOR SCHEME SETTINGS
+" =============================================================================
 
+" Molokai settings
+"let g:rehash256 = 1
+
+" Solarized settings
+"let g:solarized_termcolors=256
+"let g:solarized_degrade=1
+"let g:solarized_termtrans=1
 " =============================================================================
 "       NERD TREE SETTINGS
 " =============================================================================
