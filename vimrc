@@ -76,15 +76,15 @@ set shiftwidth=4
 set expandtab
 set smarttab
 
-" 256 color terminal support
+"" 256 color terminal support
+colorscheme xoria256
 if &term =~ '256color'
     set t_Co=256
 endif
-set background=light
+set background=dark
 
 " Syntax highlighting options.
 syntax on
-colorscheme xoria256
 set synmaxcol=2048
 
 " Highlight current line, but only in the active window.
@@ -157,7 +157,7 @@ if exists('+colorcolumn')
 endif
 
 " Remove trailing whitespace on save of certain filetypes
-autocmd FileType c,cpp,java,php,python,ruby,clojure,lisp
+autocmd FileType c,cpp,java,javascript,php,python,ruby,clojure,lisp
     \ autocmd BufWritePre <buffer> :%s/\s\+$//e
 
 " =============================================================================
