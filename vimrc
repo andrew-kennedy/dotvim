@@ -279,7 +279,7 @@ let g:ctrlp_cmd='CtrlPMixed'
 " =============================================================================
 
 " Toggle line highlights with F4.
-nmap <F4> :ToggleGitGutterLineHighlights<CR>
+nmap <F4> :GitGutterLineHighlightsToggle<CR>
 
 " =============================================================================
 "       INDENTLINE SETTINGS
