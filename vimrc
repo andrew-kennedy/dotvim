@@ -196,8 +196,8 @@ noremap <silent> ,k :wincmd k<CR>
 noremap <silent> ,l :wincmd l<CR>
 noremap <silent> ,sb :wincmd p<CR>
 noremap <silent> <C-F9>  :vertical resize -10<CR>
-noremap <silent> <C-F10> :resize +10<CR>
-noremap <silent> <C-F11> :resize -10<CR>
+noremap <silent> <C-F10> :resize -10<CR>
+noremap <silent> <C-F11> :resize +10<CR>
 noremap <silent> <C-F12> :vertical resize +10<CR>
 
 " Map CTRL-E to do what ',' used to do.
