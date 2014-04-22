@@ -112,7 +112,7 @@ set visualbell
 set backspace=indent,eol,start
 
 " Let the cursor go to invalid places
-" set virtualedit=all
+set virtualedit=all
 
 " Allow hidden buffers so unsaved buffers can go in the background
 set hidden
