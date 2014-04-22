@@ -25,9 +25,15 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'tpope/vim-rails'
 Plugin 'scrooloose/syntastic'
-Plugin 'scrooloose/nerdtree'
+Plugin 'kien/ctrlp.vim'
+Plugin 'kien/tabman.vim'
+"Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'luochen1990/rainbow'
+"Plugin 'scrooloose/nerdtree'
 Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'mbbill/undotree'
+
 
 " Vundle Colorschemes
 Plugin 'tomasr/molokai'
@@ -44,19 +50,19 @@ Plugin 'jellybeans.vim'
 " The following are examples of different formats supported.
 " Keep Plugin commands between here and filetype plugin indent on.
 " scripts on GitHub repos
-    " Plugin 'tpope/vim-fugitive'
-    " Plugin 'Lokaltog/vim-easymotion'
-    " Plugin 'tpope/vim-rails.git'
+" Plugin 'tpope/vim-fugitive'
+" Plugin 'Lokaltog/vim-easymotion'
+" Plugin 'tpope/vim-rails.git'
 " The sparkup vim script is in a subdirectory of this repo called vim.
 " Pass the path to set the runtimepath properly.
-    " Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 " scripts from http://vim-scripts.org/vim/scripts.html
-    " Plugin 'L9'
-    " Plugin 'FuzzyFinder'
+" Plugin 'L9'
+" Plugin 'FuzzyFinder'
 " scripts not on GitHub
-    " Plugin 'git://git.wincent.com/command-t.git'
+" Plugin 'git://git.wincent.com/command-t.git'
 " git repos on your local machine (i.e. when working on your own plugin)
-    " Plugin 'file:///home/gmarik/path/to/plugin'
+" Plugin 'file:///home/gmarik/path/to/plugin'
 
 " =============================================================================
 "       VIM SETTINGS
@@ -77,10 +83,10 @@ set expandtab
 set smarttab
 
 "" 256 color terminal support
-colorscheme xoria256
 if &term =~ '256color'
     set t_Co=256
 endif
+colorscheme molokai
 set background=dark
 
 " Syntax highlighting options.
@@ -125,7 +131,7 @@ set cpoptions=cesB$
 
 " Status line options.
 set laststatus=2
-set statusline=\ %{fugitive#statusline()}\ %f\ %m\ %r%=%l/%L\ <%c>\ [%p%%]\ 
+"set statusline=\ %{fugitive#statusline()}\ %f\ %m\ %r%=%l/%L\ <%c>\ [%p%%]\
 
 " Doesn't redraw during commands like macros that aren't typed (efficient)
 set lazyredraw
@@ -139,6 +145,12 @@ set timeoutlen=750
 
 " Amount of history to keep around
 set history=200
+
+" for undotree stuff, put all undo info/files in one place
+if has("persistent_undo")
+    set undodir = '~/.undodir/'
+    set undofile
+endif
 
 " Keep some context around where we're scrolling.
 set scrolloff=5
@@ -157,11 +169,11 @@ if exists('+colorcolumn')
 endif
 
 " Remove trailing whitespace on save of certain filetypes
-autocmd FileType c,cpp,java,javascript,php,python,ruby,clojure,lisp
-    \ autocmd BufWritePre <buffer> :%s/\s\+$//e
+autocmd FileType c,cpp,java,javascript,php,python,ruby,clojure,lisp,vim
+            \ autocmd BufWritePre <buffer> :%s/\s\+$//e
 
 " =============================================================================
-"       KEY MAPPINGS 
+"       KEY MAPPINGS
 " =============================================================================
 
 " Disable Arrow keys in normal mode
@@ -186,14 +198,15 @@ nmap <silent> ,p :set invpaste<CR>:set hls?<CR>
 " Turn off highlight search.
 nmap <silent> ,n :set invhls<CR>:set hls?<CR>
 
-" Toggle text wrapping. 
+" Toggle text wrapping.
 nmap <silent> ,w :set invwrap<CR>:set wrap?<CR>
 
 " Maps to make handling windows a bit easier.
-noremap <silent> ,h :wincmd h<CR>
-noremap <silent> ,j :wincmd j<CR>
-noremap <silent> ,k :wincmd k<CR>
-noremap <silent> ,l :wincmd l<CR>
+noremap <silent> <C-H> :wincmd h<CR>
+noremap <silent> <C-J> :wincmd j<CR>
+noremap <silent> <C-K> :wincmd k<CR>
+noremap <silent> <C-L> :wincmd l<CR>
+noremap <silent> <C-Q> :wincmd q<CR>
 noremap <silent> ,sb :wincmd p<CR>
 noremap <silent> <C-F9>  :vertical resize -10<CR>
 noremap <silent> <C-F10> :resize -10<CR>
@@ -215,18 +228,18 @@ nmap <silent> <C-i> 10zh
 " Highlight all instances of the current word under the cursor.
 nmap <silent> ^ :setl hls<CR>:let @/="<C-r><C-w>"<CR>
 
-" Search the current file for what's currently in the search register and 
+" Search the current file for what's currently in the search register and
 " display matches.
 nmap <silent> ,gs
-     \ :vimgrep /<C-r>// %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
+            \ :vimgrep /<C-r>// %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
 
 " Search the current file for the word under the cursor and display matches.
 nmap <silent> ,gw
-     \ :vimgrep /<C-r><C-w>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
+            \ :vimgrep /<C-r><C-w>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
 
 " Search the current file for the WORD under the cursor and display matches.
 nmap <silent> ,gW
-     \ :vimgrep /<C-r><C-a>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
+            \ :vimgrep /<C-r><C-a>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
 
 " Swap two words.
 nmap <silent> gw :s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR>`'
@@ -235,7 +248,7 @@ nmap <silent> gw :s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR>`'
 nmap <silent> ,ul :t.\|s/./=/g\|set nohls<CR>
 
 " Delete all buffers.
-"nmap <silent> ,da :exec "1," . bufnr('$') . "bd"<CR>
+nmap <silent> ,da :exec "1," . bufnr('$') . "bd"<CR>
 
 " Map jj to escape in insert mode.
 imap jj <ESC>
@@ -244,7 +257,7 @@ imap jj <ESC>
 " =============================================================================
 
 " Molokai settings
-"let g:rehash256 = 1
+let g:rehash256 = 1
 
 " Solarized settings
 "let g:solarized_termcolors=256
@@ -255,8 +268,9 @@ imap jj <ESC>
 " =============================================================================
 
 " Open/close NERD Tree with F2.
-nmap <F2> :NERDTreeToggle<CR>
-nmap <S-F2> :NERDTreeClose<CR>
+"autocmd vimenter * if !argc() | NERDTree | endif
+"nmap <F2> :NERDTreeToggle<CR>
+"nmap <S-F2> :NERDTreeClose<CR>
 
 " =============================================================================
 "       EASY MOTION SETTINGS
@@ -290,7 +304,19 @@ let g:indentLine_color_term = 238
 
 " Make them a solid bar.
 let g:indentLine_char = '│'
+" =============================================================================
+"       RAINBOW PAREN SETTINGS
+" =============================================================================
 
+let g:rainbow_active = 1
+""""""""""""""""""""""""""""""
+" airline
+""""""""""""""""""""""""""""""
+let g:airline_theme = 'molokai'
+let g:airline_enable_branch = 1
+let g:airline_enable_syntastic = 1
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 " =============================================================================
 "       RUST SYNTAX SETTINGS
 " =============================================================================
