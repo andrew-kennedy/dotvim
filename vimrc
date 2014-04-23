@@ -1,75 +1,9 @@
-" =============================================================================
-"       VUNDLE SETTINGS
-" =============================================================================
-
-" Configure Vundle.
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" Vim requires POSIX compliant shell
-set shell=/bin/bash
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-" alternatively, pass a path where Vundle should install plugins
-" let path = '~/some/path/here'
-" call vundle#rc(path)
-
-" let Vundle manage Vundle, required
-Plugin 'gmarik/vundle'
-
-" Vundle bundles
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'tpope/vim-fugitive'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'tpope/vim-rails'
-Plugin 'scrooloose/syntastic'
-Plugin 'kien/ctrlp.vim'
-Plugin 'kien/tabman.vim'
-"Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'luochen1990/rainbow'
-"Plugin 'scrooloose/nerdtree'
-Plugin 'bling/vim-airline'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'mbbill/undotree'
-
-
-" Vundle Colorschemes
-Plugin 'tomasr/molokai'
-Plugin 'xoria256.vim'
-Plugin 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
-Plugin 'chriskempson/base16-vim'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'jellybeans.vim'
-
-" =============================================================================
-"       EXAMPLE VUNDLE PLUGINS FOR REFERENCE
-" =============================================================================
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between here and filetype plugin indent on.
-" scripts on GitHub repos
-" Plugin 'tpope/vim-fugitive'
-" Plugin 'Lokaltog/vim-easymotion'
-" Plugin 'tpope/vim-rails.git'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" scripts from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Plugin 'FuzzyFinder'
-" scripts not on GitHub
-" Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-" Plugin 'file:///home/gmarik/path/to/plugin'
-
-" =============================================================================
-"       VIM SETTINGS
-" =============================================================================
+silent source ~/.vim/bundles.vim
 
 " Filetype detection, plugins, and indenting.
 filetype plugin indent on
+
+let mapleader=","
 
 " Hybrid line numbers.
 set relativenumber
@@ -148,7 +82,7 @@ set history=200
 
 " for undotree stuff, put all undo info/files in one place
 if has("persistent_undo")
-    set undodir = '~/.undodir/'
+    set undodir=~/.undodir/
     set undofile
 endif
 
@@ -193,13 +127,13 @@ map ; :
 noremap ;; ;
 
 " Toggle paste mode.
-nmap <silent> ,p :set invpaste<CR>:set hls?<CR>
+nnoremap<leader>p :set paste!<CR>
 
 " Turn off highlight search.
 nmap <silent> ,n :set invhls<CR>:set hls?<CR>
 
 " Toggle text wrapping.
-nmap <silent> ,w :set invwrap<CR>:set wrap?<CR>
+"nmap <silent> ,w :set invwrap<CR>:set wrap?<CR>
 
 " Maps to make handling windows a bit easier.
 noremap <silent> <C-H> :wincmd h<CR>
@@ -217,16 +151,22 @@ noremap <silent> <C-F12> :vertical resize +10<CR>
 nnoremap <c-e> ,
 vnoremap <c-e> ,
 
+"to create a new line cmd mode without going to insert
+nmap <leader>k O<esc>k0
+nmap <leader>j o<esc>j0
+
 " Edit the vimrc file.
-nmap <silent> ,ev :e $MYVIMRC<CR>
-nmap <silent> ,sv :so $MYVIMRC<CR>
+nmap <silent> <Leader>vv :e ~/.vim/vimrc<CR>
+nmap <silent> <Leader>sv :so ~/.vim/vimrc<CR>
+nmap <silent> <Leader>eb :e ~/.vim/bundles.vim<CR>
+nmap <silent> <Leader>ep :e ~/.vim/plugin_config.vim<CR>
 
 " Make horizontal scrolling easier.
 nmap <silent> <C-o> 10zl
 nmap <silent> <C-i> 10zh
 
 " Highlight all instances of the current word under the cursor.
-nmap <silent> ^ :setl hls<CR>:let @/="<C-r><C-w>"<CR>
+"nmap <silent> ^ :setl hls<CR>:let @/="<C-r><C-w>"<CR>
 
 " Search the current file for what's currently in the search register and
 " display matches.
@@ -252,74 +192,6 @@ nmap <silent> ,da :exec "1," . bufnr('$') . "bd"<CR>
 
 " Map jj to escape in insert mode.
 imap jj <ESC>
-" =============================================================================
-"       COLOR SCHEME SETTINGS
-" =============================================================================
 
-" Molokai settings
-let g:rehash256 = 1
-
-" Solarized settings
-"let g:solarized_termcolors=256
-"let g:solarized_degrade=1
-"let g:solarized_termtrans=1
-" =============================================================================
-"       NERD TREE SETTINGS
-" =============================================================================
-
-" Open/close NERD Tree with F2.
-"autocmd vimenter * if !argc() | NERDTree | endif
-"nmap <F2> :NERDTreeToggle<CR>
-"nmap <S-F2> :NERDTreeClose<CR>
-
-" =============================================================================
-"       EASY MOTION SETTINGS
-" =============================================================================
-" Rather than pollute the whole keyspace, use ,m as the trigger.
-let g:EasyMotion_leader_key=',m'
-
-" =============================================================================
-"       CTRLP SETTINGS
-" =============================================================================
-
-" Run in mixed mode by default.
-let g:ctrlp_cmd='CtrlPMixed'
-
-" Put the cache directory in a tmps RAM disk.
-" let g:ctrlp_cache_dir='/tmp/ctrlp-cache'
-
-" =============================================================================
-"       GITGUTTER TWEAKS
-" =============================================================================
-
-" Toggle line highlights with F4.
-nmap <F4> :GitGutterLineHighlightsToggle<CR>
-
-" =============================================================================
-"       INDENTLINE SETTINGS
-" =============================================================================
-
-" Use soft gray color.
-let g:indentLine_color_term = 238
-
-" Make them a solid bar.
-let g:indentLine_char = '│'
-" =============================================================================
-"       RAINBOW PAREN SETTINGS
-" =============================================================================
-
-let g:rainbow_active = 1
-""""""""""""""""""""""""""""""
-" airline
-""""""""""""""""""""""""""""""
-let g:airline_theme = 'molokai'
-let g:airline_enable_branch = 1
-let g:airline_enable_syntastic = 1
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-" =============================================================================
-"       RUST SYNTAX SETTINGS
-" =============================================================================
-
-" Don't conceal arrows with fancy UTF-8 versions.
-let g:no_rust_conceal = 2
+" Load plugin settings now
+silent source ~/.vim/plugin_config.vim
