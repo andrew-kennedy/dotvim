@@ -1,3 +1,4 @@
+" Load Vundle config and plugins
 silent source ~/.vim/bundles.vim
 
 " Filetype detection, plugins, and indenting.
@@ -8,6 +9,9 @@ let mapleader=","
 " Hybrid line numbers.
 set relativenumber
 set number
+
+" set to autoread when a file is changed from outside
+set autoread
 
 " Tabbing options.
 set tabstop=4
@@ -41,6 +45,9 @@ set smartcase
 set hlsearch
 set incsearch
 set path=.,/usr/include/**,/usr/local/include/**
+
+" allow saving of files as sudo when I forgot to start vim using sudo.
+cmap w!! w !sudo tee > /dev/null %
 
 " Use forward slashes in paths regardless of the OS.
 set shellslash
@@ -78,7 +85,7 @@ set showmode
 set timeoutlen=750
 
 " Amount of history to keep around
-set history=200
+set history=1000
 
 " for undotree stuff, put all undo info/files in one place
 if has("persistent_undo")
@@ -87,7 +94,7 @@ if has("persistent_undo")
 endif
 
 " Keep some context around where we're scrolling.
-set scrolloff=5
+set scrolloff=7
 set sidescrolloff=10
 
 " Completion options.
@@ -95,6 +102,11 @@ set wildmenu
 set complete=.,w,b,t,i
 set showfulltag
 set tags=./tags,tags
+
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
 
 " Various line wrapping and line width settings.
 set nowrap
@@ -109,6 +121,9 @@ autocmd FileType c,cpp,java,javascript,php,python,ruby,clojure,lisp,vim
 " =============================================================================
 "       KEY MAPPINGS
 " =============================================================================
+
+" Fast saving
+nmap <leader>w :w!<cr>
 
 " Disable Arrow keys in normal mode
 map <up> <nop>
@@ -130,10 +145,14 @@ noremap ;; ;
 nnoremap<leader>p :set paste!<CR>
 
 " Turn off highlight search.
-nmap <silent> ,n :set invhls<CR>:set hls?<CR>
+nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
 
 " Toggle text wrapping.
 "nmap <silent> ,w :set invwrap<CR>:set wrap?<CR>
+
+" Cycle through open buffers
+noremap <silent> <F7> :bp<CR>
+noremap <silent> <F8> :bn<CR>
 
 " Maps to make handling windows a bit easier.
 noremap <silent> <C-H> :wincmd h<CR>
@@ -166,7 +185,7 @@ nmap <silent> <C-o> 10zl
 nmap <silent> <C-i> 10zh
 
 " Highlight all instances of the current word under the cursor.
-"nmap <silent> ^ :setl hls<CR>:let @/="<C-r><C-w>"<CR>
+nmap <silent> ^ :setl hls<CR>:let @/="<C-r><C-w>"<CR>
 
 " Search the current file for what's currently in the search register and
 " display matches.

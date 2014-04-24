@@ -1,4 +1,4 @@
- " =============================================================================
+" =============================================================================
 "       VUNDLE SETTINGS
 " =============================================================================
 
@@ -7,7 +7,9 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " Vim requires POSIX compliant shell
-set shell=/bin/bash
+if &shell =~# 'fish$'
+    set shell=/bin/bash
+endif
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/vundle/
@@ -20,6 +22,7 @@ call vundle#rc()
 Plugin 'gmarik/vundle'
 
 " Vundle bundles
+"Plugin 'tpope/vim-sensible'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Lokaltog/vim-easymotion'
@@ -36,7 +39,12 @@ Plugin 'luochen1990/rainbow'
 Plugin 'bling/vim-airline'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mbbill/undotree'
+Plugin 'Yggdroot/indentLine'
+Plugin 'tpope/vim-sleuth'
 
+" Ultisnips engine is the first plugin, snippets are separate
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
 
 " Vundle Colorschemes
 Plugin 'tomasr/molokai'
