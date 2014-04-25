@@ -1,4 +1,3 @@
-bundle/**
-undo/
-backup/
-viminfo
+*
+!vimrc
+!README.md
