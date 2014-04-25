@@ -79,6 +79,7 @@ function! LoadBundles()
   Plugin 'gmarik/vundle'
 
   " The best autocomplete
+  " run cd ~/.vim/bundle/YouCompleteMe ./install.sh to compile it after
   Plugin 'Valloric/YouCompleteMe'
 
   " Easily jump around on screen with <Leader> <Leader> motion
@@ -191,21 +192,23 @@ endfunction
 " Only install vundle and bundles if git exists...
 if executable('git') && has('autocmd')
 
+  " Vim requires POSIX compliant shell
+  if &shell =~# 'fish$'
+    set shell=/bin/bash
+  endif
   if !isdirectory(expand('~/.vim/bundle/vundle'))
     echomsg '*******************************'
     echomsg 'Bootstrapping vim configuration'
     echomsg '*******************************'
     echomsg ''
     echomsg 'This will take a minute or two...'
+    echomsg 'To enable Clang support in YouCompleteMe run:'
+    echomsg 'cd ~/.vim/bundle/YouCompleteMe ./install.sh'
     echomsg ''
     silent !mkdir -p ~/.vim/bundle && git clone --quiet https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
     let s:bootstrap=1
   endif
 
-  " Vim requires POSIX compliant shell
-  if &shell =~# 'fish$'
-    set shell=/bin/bash
-  endif
   set rtp+=~/.vim/bundle/vundle/
   filetype off                   " required!
   call vundle#rc()
@@ -558,15 +561,15 @@ nmap <silent> ^ :setl hls<CR>:let @/="<C-r><C-w>"<CR>
 " Search the current file for what's currently in the search register and
 " display matches.
 nmap <silent> ,gs
-            \ :vimgrep /<C-r>// %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
+      \ :vimgrep /<C-r>// %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
 
 " Search the current file for the word under the cursor and display matches.
 nmap <silent> ,gw
-            \ :vimgrep /<C-r><C-w>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
+      \ :vimgrep /<C-r><C-w>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
 
 " Search the current file for the WORD under the cursor and display matches.
 nmap <silent> ,gW
-            \ :vimgrep /<C-r><C-a>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
+      \ :vimgrep /<C-r><C-a>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:set nohls<CR>
 
 " Swap two words.
 nmap <silent> gw :s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR>`'
