@@ -1,126 +1,471 @@
-" Load Vundle config and plugins
-silent source ~/.vim/bundles.vim
+" QuickStart
+"
+" Vim should auto-install Vundle and all the required parts...
+" If it fails for some reason, then you can do it manually with:
+"    mkdir -p ~/.vim/bundle && git clone http://github.com/gmarik/vundle.git ~/.vim/bundle/vundle && vim +PluginInstall +qall
+" Update your vundle packages with:
+"    vim +PluginUpdate +qall
+"
+" This file uses folding mode in vim. To navigate this file, use the following
+" command mode keys:
+" * zR      - Open all folds.
+" * zM      - Close all folds.
+" * <space> - Toggle the current fold.
+"
 
-" Filetype detection, plugins, and indenting.
-filetype plugin indent on
+" Remove ALL autocommands to prevent them from being loaded twice.
+if has("autocmd")
+  autocmd!
+endif
 
-let mapleader=","
+" We love syntax highlighting.
+if has('syntax')
+  syntax enable
+endif
 
-" Hybrid line numbers.
+" Options
+"-----------------------------------------------------------------------------
+" See `:h options` for more help.
+set nocompatible                 " The most important VIM option
+scriptencoding utf-8
+
+set smarttab
+set tabstop=4                    " set the default tabstops
+set shiftwidth=4                 " set the default autoindent
+set softtabstop=4
+set expandtab
+
+set hidden                       " Allow buffers to exist in background"
+
+set autoindent
+set shiftround                   " Round indents to a multiple of 'shiftwidth'
+set backspace=indent,eol,start   " Set for maximum backspace smartness
+
+set nowrap                       " Soft (without changing text) wrapping.
+set linebreak                    " Only wrap on characters in `breakat`
+if has('multi_byte')
+  let &showbreak = '↳ '
+else
+  let &showbreak = '> '
+endif
+
+set ignorecase                   " ignore case in searches ... (\c\C override)
+set smartcase                    " ... unless there are caps in the search
+set incsearch                    " If the terminal is slow, turn this off
+
 set relativenumber
 set number
 
-" set to autoread when a file is changed from outside
-set autoread
+set wildmode=list:longest,full   " Completion for wildchar (see help)
+set wildmenu
+set wildignore+=*.o,*.obj,*.pyc,*.pyo,*.pyd,*.class,*.lock
+set wildignore+=*.png,*.gif,*.jpg,*.ico
+set wildignore+=.git,.svn,.hg
+set showcmd                      " display incomplete commands
 
-" Tabbing options.
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set expandtab
-set smarttab
+set showmatch                    " Show the matching bracket
+set matchpairs=(:),{:},[:]       " List of characters we expect to see in pairs
 
-"" 256 color terminal support
-if &term =~ '256color'
-    set t_Co=256
+set cursorline                   " highlights the current line
+set history=1000                 " Save more history.
+
+set autoread                     " autoread a file when changed from outside "
+
+" Vundler - vim package manager
+"-----------------------------------------------------------------------------
+function! LoadBundles()
+  " let Vundle manage Vundle
+  " required!
+  Plugin 'gmarik/vundle'
+
+  " The best autocomplete
+  Plugin 'Valloric/YouCompleteMe'
+
+  " Easily jump around on screen with <Leader> <Leader> motion
+  Plugin 'Lokaltog/vim-easymotion'
+
+  " Quickly access and edit files and buffers with fuzzy search
+  Plugin 'kien/ctrlp.vim'
+  let g:ctrlp_cmd = 'CtrlPMixed'
+
+  " Easily navigate tabs
+  Plugin 'kien/tabman.vim'
+
+  "Plugin 'kien/rainbow_parentheses.vim'
+
+  " Another rainbow parentheses plugin
+  Plugin 'luochen1990/rainbow'
+  let g:rainbow_active = 1
+
+  "Plugin 'scrooloose/nerdtree'
+
+  " Git informatino displayed in the gutter
+  Plugin 'airblade/vim-gitgutter'
+  nmap <F4> :GitGutterLineHighlightsToggle<CR>
+
+  " View and browse undo history in a graphical tree
+  Plugin 'mbbill/undotree'
+
+  " Ultisnips engine is the first plugin, snippets are separate
+  Plugin 'SirVer/ultisnips'
+  let g:UltiSnipsExpandTrigger="<c-j>"
+  let g:UltiSnipsJumpForwardTrigger="<c-f>"
+  let g:UltiSnipsJumpBackwardTrigger="<c-d>"
+  let g:UltiSnipsEditSplit="vertical"
+  Plugin 'honza/vim-snippets'
+
+  " Vundle Colorschemes
+  Plugin 'tomasr/molokai'
+  let g:rehash256 = 1
+  Plugin 'xoria256.vim'
+  Plugin 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
+  Plugin 'chriskempson/base16-vim'
+  Plugin 'altercation/vim-colors-solarized'
+  Plugin 'jellybeans.vim'
+
+  " Autopair mode - If you type '(', it'll fill in ')'
+  Plugin 'Townk/vim-autoclose'
+
+  " Move lines with '[e' and ']e' along with a lot of other
+  " fun things.  :help unimpaired
+  Plugin 'tpope/vim-unimpaired'
+  " Bubble single line
+  nmap <C-S-k> <Plug>unimpairedMoveUp
+  nmap <C-S-j> <Plug>unimpairedMoveDown
+
+  " Bubble visually selected lines
+  xmap <C-S-k> <Plug>unimpairedMoveUp gv
+  xmap <C-S-j> <Plug>unimpairedMoveDown gv
+
+  " Detect indentation
+  Plugin 'tpope/vim-sleuth'
+
+  " Syntax checking
+  if exists('*getmatches')
+    Plugin 'scrooloose/syntastic'
+    let g:syntastic_error_symbol          = '✗✗'
+    let g:syntastic_warning_symbol        = '⚠⚠'
+    let g:syntastic_style_error_symbol    = '✗'
+    let g:syntastic_style_warning_symbol  = '⚠'
+    let g:syntastic_auto_loc_list         = 1 " Close the location-list when errors are gone
+    let g:syntastic_loc_list_height       = 5
+    let g:syntastic_javascript_checkers = ['jshint']
+    let g:syntastic_c_checkers = ['gcc']
+  endif
+
+  " Display an indent line
+  Plugin 'Yggdroot/indentLine'
+  let g:indentLine_char = "⋮"
+  let g:indentLine_noConcealCursor = 1
+
+  " ds/cs/ys for deleting, changing, your surrounding chars (like ', ", etc.)
+  Plugin 'tpope/vim-surround'
+
+  " Deal with git in a sane way
+  Plugin 'tpope/vim-fugitive'
+
+  " Support '.' correctly for plugins that support this module.
+  Plugin 'tpope/vim-repeat'
+
+  " Allow chording 'jk' as a replacement for ESC
+  Plugin 'kana/vim-arpeggio'
+
+  " Allow C-A/C-X to work correctly with dates/times.
+  Plugin 'tpope/vim-speeddating'
+
+  if v:version >= 702
+    Plugin 'bling/vim-airline'
+    let g:airline_theme = 'luna'
+    let g:airline_enable_branch = 1
+    let g:airline_enable_syntastic = 1
+    let g:airline_powerline_fonts = 1
+    let g:airline#extensions#tabline#enabled = 1
+    set noshowmode
+  endif
+
+  if filereadable(expand("~/.vimrc.bundles"))
+    source ~/.vimrc.bundles
+  endif
+endfunction
+
+" Only install vundle and bundles if git exists...
+if executable('git') && has('autocmd')
+
+  if !isdirectory(expand('~/.vim/bundle/vundle'))
+    echomsg '*******************************'
+    echomsg 'Bootstrapping vim configuration'
+    echomsg '*******************************'
+    echomsg ''
+    echomsg 'This will take a minute or two...'
+    echomsg ''
+    silent !mkdir -p ~/.vim/bundle && git clone --quiet https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+    let s:bootstrap=1
+  endif
+
+  " Vim requires POSIX compliant shell
+  if &shell =~# 'fish$'
+    set shell=/bin/bash
+  endif
+  set rtp+=~/.vim/bundle/vundle/
+  filetype off                   " required!
+  call vundle#rc()
+  call LoadBundles()
+  filetype plugin indent on
+
+  if exists("s:bootstrap") && s:bootstrap
+    unlet s:bootstrap
+    " TODO Run BundleInstall whenever the .vimrc changes (specifically the
+    " Bundle settings).
+    PluginInstall
+    quit " Close the bundle install window.
+  endif
+elseif has('autocmd')
+  filetype plugin indent on
 endif
-colorscheme molokai
-set background=dark
 
-" Syntax highlighting options.
-syntax on
-set synmaxcol=2048
 
-" Highlight current line, but only in the active window.
-augroup CursorLine
-    au!
-    au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-    au WinLeave * setlocal nocursorline
+"
+" Brief help
+" :BundleList          - list configured bundles
+" :BundleInstall(!)    - install(update) bundles
+" :BundleSearch(!) foo - search(or refresh cache first) for foo
+" :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+"
+" see :h vundle for more details or wiki for FAQ
+" NOTE: comments after Bundle command are not allowed..
+
+" Create Parent Directories
+"-----------------------------------------------------------------------------
+" Create directories if the parent directory for a
+" file doesn't exist.
+" from: http://stackoverflow.com/a/4294176/108857
+function! s:MkNonExDir(file, buf)
+  if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+    let dir=fnamemodify(a:file, ':h')
+    if !isdirectory(dir)
+      call mkdir(dir, 'p')
+    endif
+  endif
+endfunction
+
+augroup BWCCreateDir
+  autocmd!
+  autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
 
-" Search/find options.
-set wrapscan
-set ignorecase
-set smartcase
+" Post Bundle Initialization
+"-----------------------------------------------------------------------------
+" More complicated stuff that can only work after the bundles are loaded.
+" e.g. detecting if something *isn't* loaded.
+function! PostBundleSetup()
+  " Do stuff
+endfunction
+
+if has("autocmd")
+  autocmd VimEnter * nested call PostBundleSetup()
+endif
+
+" Helper functions
+"-----------------------------------------------------------------------------
+
+" A wrapper function to restore the cursor position, window position,
+" and last search after running a command.
+function! Preserve(command)
+  " Save the last search
+  let last_search=@/
+  " Save the current cursor position
+  let save_cursor = getpos(".")
+  " Save the window position
+  normal H
+  let save_window = getpos(".")
+  call setpos('.', save_cursor)
+
+  " Do the business:
+  execute a:command
+
+  " Restore the last_search
+  let @/=last_search
+  " Restore the window position
+  call setpos('.', save_window)
+  normal zt
+  " Restore the cursor position
+  call setpos('.', save_cursor)
+endfunction
+
+" Terminal and display settings
+"-----------------------------------------------------------------------------
+set laststatus=2      " show status line all the time
+set scrolloff=5       " don't scroll any closer to top/bottom
+set sidescrolloff=10  " don't scroll any closer to left/right
+
+" Syntastical statusline format - Ignored when powerline is enabled.
+let g:syntastic_stl_format = '[%E{Err: %fe #%e}%B{, }%W{Warn: %fw #%w}]'
+
+" Gnome terminal doesn't advertise its 256-colors
+" http://askubuntu.com/a/126
+if $COLORTERM == 'gnome-terminal'
+  set t_Co=256
+endif
+if &term =~ '256color'
+  set t_Co=256
+endif
+set background=dark
+
+try
+  colorscheme molokai
+catch /^Vim\%((\a\+)\)\=:E185/
+  " deal wit it
+endtry
+
+if exists('+colorcolumn')
+  set cc=80
+endif
+
+" In many terminal emulators the mouse works just fine, thus enable it.
+if v:version >= 702 && has('mouse')
+  set mouse=a
+  if &term =~ "xterm" || &term =~ "screen"
+    set ttymouse=xterm2
+  endif
+endif
+
+" Switch on highlighting the last used search pattern.
 set hlsearch
-set incsearch
-set path=.,/usr/include/**,/usr/local/include/**
 
-" allow saving of files as sudo when I forgot to start vim using sudo.
-cmap w!! w !sudo tee > /dev/null %
-
-" Use forward slashes in paths regardless of the OS.
-set shellslash
-
-" Use the visual bell instead of beeping like crazy.
-set visualbell
-
-" Allow backspacing over indents, EOL, and the start of insert.
-set backspace=indent,eol,start
-
-" Let the cursor go to invalid places
-set virtualedit=all
-
-" Allow hidden buffers so unsaved buffers can go in the background
-set hidden
+" No visual or beeping bell.
+set vb t_vb=
 
 " Allow for more characters to be sent to the terminal for faster redraw
 set ttyfast
 
-" Use a $ to mark the end of a work when changing it.
-set cpoptions=cesB$
-
-" Status line options.
-set laststatus=2
-"set statusline=\ %{fugitive#statusline()}\ %f\ %m\ %r%=%l/%L\ <%c>\ [%p%%]\
-
-" Doesn't redraw during commands like macros that aren't typed (efficient)
-set lazyredraw
-
-" Show the command helper and current mode.
-set showcmd
-set showmode
-
-" Multi-key macro timeout.
-set timeoutlen=750
-
-" Amount of history to keep around
-set history=1000
-
-" for undotree stuff, put all undo info/files in one place
-if has("persistent_undo")
-    set undodir=~/.undodir/
-    set undofile
+"set list listchars=tab:»·,trail:·,nbsp:+ " Show the leading whitespaces
+set list!
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+if !has('win32') && (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8')
+  let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
 endif
 
-" Keep some context around where we're scrolling.
-set scrolloff=7
-set sidescrolloff=10
+set display+=uhex                         " Show unprintables as <xx>
+set display+=lastline                     " show as much as possible of the last line.
 
-" Completion options.
-set wildmenu
-set complete=.,w,b,t,i
-set showfulltag
-set tags=./tags,tags
-
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
-set noswapfile
-
-" Various line wrapping and line width settings.
-set nowrap
-if exists('+colorcolumn')
-    set cc=80
+" Backups, undos, and swap files
+"-----------------------------------------------------------------------------
+" Save your backups to a less annoying place than the current directory.
+" If you have .vim-backup in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/backup or . if all else fails.
+if isdirectory($HOME . '/.vim/backup') == 0
+  silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+endif
+set backupdir-=.
+set backupdir+=.
+set backupdir-=~/
+set backupdir^=~/.vim/backup/
+set backupdir^=./.vim-backup/
+set backup
+" Prevent backups from overwriting each other. The naming is weird,
+" since I'm using the 'backupext' variable to append the path.
+" So the file '/home/docwhat/.vimrc' becomes '.vimrc%home%docwhat~'
+if has("autocmd")
+  autocmd BufWritePre * nested let &backupext = substitute(expand('%:p:h'), '/', '%', 'g') . '~'
 endif
 
-" Remove trailing whitespace on save of certain filetypes
-autocmd FileType c,cpp,java,javascript,php,python,ruby,clojure,lisp,vim
-            \ autocmd BufWritePre <buffer> :%s/\s\+$//e
 
-" =============================================================================
-"       KEY MAPPINGS
-" =============================================================================
+if has("macunix")
+  set backupskip+=/private/tmp/*
+endif
+
+" Save your swp files to a less annoying place than the current directory.
+" If you have .vim-swap in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/swap, ~/tmp or .
+if isdirectory($HOME . '/.vim/swap') == 0
+  silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+endif
+set directory=./.vim-swap//
+set directory+=~/.vim/swap//
+set directory+=~/tmp//
+set directory+=.
+
+" viminfo stores the the state of your previous editing session
+set viminfo+=n~/.vim/viminfo
+set viminfo^=!,h,f0,:100,/100,@100
+
+if exists("+undofile")
+  " undofile - This allows you to use undos after exiting and restarting
+  " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
+  " :help undo-persistence
+  " This is only present in 7.3+
+  if isdirectory($HOME . '/.vim/undo') == 0
+    silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+  endif
+  set undodir=./.vim-undo//
+  set undodir+=~/.vim/undo//
+  set undofile
+  set undolevels=1000         " maximum number of changes that can be undone
+  set undoreload=10000        " maximum number lines to save for undo on a buffer reload
+endif
+
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+" Also don't do it when the mark is in the first line, that is the default
+" position when opening a file.
+if has("autocmd")
+  autocmd BufReadPost * nested
+        \ if line("'\"") > 1 && line("'\"") <= line("$") |
+        \   exe "normal! g`\"" |
+        \ endif
+endif
+
+
+" Misc. Commands
+"-----------------------------------------------------------------------------
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+        \ | wincmd p | diffthis
+endif
+
+
+function! StripTrailingWhite()
+  let l:winview = winsaveview()
+  silent! %s/\s\+$//
+  call winrestview(l:winview)
+endfunction
+if has("autocmd")
+  autocmd BufWritePre * nested call StripTrailingWhite()
+endif
+
+" Needed for some snippets
+function! Filename(...)
+  let filename = expand('%:t:r')
+  if filename == '' | return a:0 == 2 ? a:2 : '' | endif
+  return !a:0 || a:1 == '' ? filename : substitute(a:1, '$1', filename, 'g')
+endfunction
+
+" Omnicompletion
+"-----------------------------------------------------------------------------
+
+set completeopt=menu,longest
+set omnifunc=syntaxcomplete#Complete " This is overriden by syntax plugins.
+
+
+if has('autocmd')
+  autocmd FileType python        nested setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType ruby,eruby    nested setlocal omnifunc=rubycomplete#Complete
+  autocmd FileType css           nested setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown nested setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript    nested setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType xml           nested setlocal omnifunc=xmlcomplete#CompleteTags
+endif
+
+
+" Key bindings
+"-----------------------------------------------------------------------------
+" Helpful links:
+"  http://stackoverflow.com/questions/2483849/detect-if-a-key-is-bound-to-something-in-vim
+let g:mapleader = ","
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -142,43 +487,66 @@ map ; :
 noremap ;; ;
 
 " Toggle paste mode.
-nnoremap<leader>p :set paste!<CR>
+nnoremap <silent> <leader>p :set paste!<CR>
 
-" Turn off highlight search.
-nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
+" In diff mode, recenter after changing to next/previous diff
+map ]c ]czz
+map [c [czz
 
-" Toggle text wrapping.
-"nmap <silent> ,w :set invwrap<CR>:set wrap?<CR>
+map <silent> <Leader>b :buffers<CR>
+
+" With a visual block seleced, fold on space. Refold on space in command mode.
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':'1')<CR>
+xnoremap <Space> zf
+
+" Prevent highlight being lost on (de)indent.
+xnoremap < <gv
+xnoremap > >gv
+
+" Indent whole file
+nmap <silent> <Leader>g :call Preserve("normal gg=G")<CR>
+nmap <silent> <Leader><space> :call Preserve("%s/\\s\\+$//e")<CR>
+
+" Since C-l is now window navigation, use Leader-h
+" to redraw (and hide highlighted search).
+nnoremap <silent> <Leader>h :nohlsearch<CR><C-L>
+
+
+" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" so that you can undo CTRL-U after inserting a line break.
+" inoremap <C-U> <C-G>u<C-U>
+" inoremap <CR> <C-G>u<CR>
+
+" Make Y behave like other capitals.
+nnoremap Y y$
+
+" Don't use Ex mode, use Q for formatting
+nnoremap Q gq
+
+" For when you forget to sudo.. Really Write the file.
+cnoremap w!! w !sudo tee % >/dev/null
 
 " Cycle through open buffers
 noremap <silent> <F7> :bp<CR>
 noremap <silent> <F8> :bn<CR>
 
 " Maps to make handling windows a bit easier.
-noremap <silent> <C-H> :wincmd h<CR>
-noremap <silent> <C-J> :wincmd j<CR>
-noremap <silent> <C-K> :wincmd k<CR>
-noremap <silent> <C-L> :wincmd l<CR>
-noremap <silent> <C-Q> :wincmd q<CR>
-noremap <silent> ,sb :wincmd p<CR>
 noremap <silent> <C-F9>  :vertical resize -10<CR>
-noremap <silent> <C-F10> :resize -10<CR>
-noremap <silent> <C-F11> :resize +10<CR>
-noremap <silent> <C-F12> :vertical resize +10<CR>
+noremap <silent> <C-F10> :verticl resize +10<CR>
+noremap <silent> <C-F11> :resize -10<CR>
+noremap <silent> <C-F12> :resize +10<CR>
 
 " Map CTRL-E to do what ',' used to do.
 nnoremap <c-e> ,
 vnoremap <c-e> ,
 
 "to create a new line cmd mode without going to insert
-nmap <leader>k O<esc>k0
-nmap <leader>j o<esc>j0
+nmap <leader>k O<esc>j0
+nmap <leader>j o<esc>k0
 
 " Edit the vimrc file.
 nmap <silent> <Leader>vv :e ~/.vim/vimrc<CR>
 nmap <silent> <Leader>sv :so ~/.vim/vimrc<CR>
-nmap <silent> <Leader>eb :e ~/.vim/bundles.vim<CR>
-nmap <silent> <Leader>ep :e ~/.vim/plugin_config.vim<CR>
 
 " Make horizontal scrolling easier.
 nmap <silent> <C-o> 10zl
@@ -203,14 +571,42 @@ nmap <silent> ,gW
 " Swap two words.
 nmap <silent> gw :s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR>`'
 
-" Underline the current line with '='.
-nmap <silent> ,ul :t.\|s/./=/g\|set nohls<CR>
+" Some helpers to edit mode
+" http://vimcasts.org/e/14
+cnoremap %% <C-R>=expand('%:h').'/'<cr>
+" Since these use %% they can't be noremap'd.
+nmap <leader>ew :e %%
+nmap <leader>es :sp %%
+nmap <leader>ev :vsp %%
+nmap <leader>et :tabe %%
 
-" Delete all buffers.
-nmap <silent> ,da :exec "1," . bufnr('$') . "bd"<CR>
+" Change Working Directory to that of the current file
+cnoremap cwd lcd %%
+cnoremap cd. lcd %%
 
-" Map jj to escape in insert mode.
-imap jj <ESC>
+" GUI Settings
+"-----------------------------------------------------------------------------
+if has('gui_running')
+  set guioptions-=T " remove the toolbar
+  if has("gui_gtk2")
+    " We need good defaults for Linux
+    "set guifont=Andale\ Mono\ Regular\ 16,Menlo\ Regular\ 15,Consolas\ Regular\ 16,Courier\ New\ Regular\ 18
+  elseif has('gui_macvim')
+    set transparency=3
+    set guifont=Meslo\ LG\ S\ DZ\ for\ Powerline:h14,Menlo:h14
+  else
+    " We need good defaults for Windows
+    "set guifont=Andale\ Mono\ Regular:h16,Menlo\ Regular:h15,Consolas\ Regular:h16,Courier\ New\ Regular:h18
+  endif
+endif
 
-" Load plugin settings now
-silent source ~/.vim/plugin_config.vim
+" Local vimrc settings
+"-----------------------------------------------------------------------------
+" If the file ~/.vimrc.local exists, then it will be loaded as well.
+
+if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
+endif
+
+set secure
+" EOF
