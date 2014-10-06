@@ -82,6 +82,7 @@ function! LoadBundles()
   " run cd ~/.vim/bundle/YouCompleteMe ./install.sh to compile it after
   Plugin 'Valloric/YouCompleteMe'
 
+  let g:ycm_confirm_extra_conf = 0
   " Easily jump around on screen with <Leader> <Leader> motion
   Plugin 'Lokaltog/vim-easymotion'
 
@@ -108,11 +109,11 @@ function! LoadBundles()
   Plugin 'mbbill/undotree'
 
   " Ultisnips engine is the first plugin, snippets are separate
-  Plugin 'SirVer/ultisnips'
-  let g:UltiSnipsExpandTrigger="<c-j>"
-  let g:UltiSnipsJumpForwardTrigger="<c-f>"
-  let g:UltiSnipsJumpBackwardTrigger="<c-d>"
-  let g:UltiSnipsEditSplit="vertical"
+"  Plugin 'SirVer/ultisnips'
+"  let g:UltiSnipsExpandTrigger="<c-j>"
+"  let g:UltiSnipsJumpForwardTrigger="<c-f>"
+"  let g:UltiSnipsJumpBackwardTrigger="<c-d>"
+"  let g:UltiSnipsEditSplit="vertical"
   Plugin 'honza/vim-snippets'
 
   " Vundle Colorschemes
@@ -142,17 +143,17 @@ function! LoadBundles()
   Plugin 'tpope/vim-sleuth'
 
   " Syntax checking
-  if exists('*getmatches')
-    Plugin 'scrooloose/syntastic'
-    let g:syntastic_error_symbol          = '✗✗'
-    let g:syntastic_warning_symbol        = '⚠⚠'
-    let g:syntastic_style_error_symbol    = '✗'
-    let g:syntastic_style_warning_symbol  = '⚠'
-    let g:syntastic_auto_loc_list         = 1 " Close the location-list when errors are gone
-    let g:syntastic_loc_list_height       = 5
-    let g:syntastic_javascript_checkers = ['jshint']
-    let g:syntastic_c_checkers = ['gcc']
-  endif
+"  if exists('*getmatches')
+"    Plugin 'scrooloose/syntastic'
+"    let g:syntastic_error_symbol          = '✗✗'
+"    let g:syntastic_warning_symbol        = '⚠⚠'
+"    let g:syntastic_style_error_symbol    = '✗'
+"    let g:syntastic_style_warning_symbol  = '⚠'
+"    let g:syntastic_auto_loc_list         = 1 " Close the location-list when errors are gone
+"    let g:syntastic_loc_list_height       = 5
+"    let g:syntastic_javascript_checkers = ['jshint']
+"    let g:syntastic_c_checkers = ['gcc']
+"  endif
 
   " Display an indent line
   Plugin 'Yggdroot/indentLine'
@@ -179,7 +180,7 @@ function! LoadBundles()
     let g:airline_theme = 'luna'
     let g:airline_enable_branch = 1
     let g:airline_enable_syntastic = 1
-    let g:airline_powerline_fonts = 1
+    let g:airline_powerline_fonts = 0
     let g:airline#extensions#tabline#enabled = 1
     set noshowmode
   endif
