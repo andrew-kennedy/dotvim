@@ -3,12 +3,7 @@
 ####Clone the repo:####
 
 ```shell
-$ git clone git@github.com:sudoExistencem/dotvim.git ~/.vim
+$ git clone git@github.com:andrew-kennedy/dotvim.git ~/.vim && echo "runtime vimrc" > ~/.vimrc
 ```
 
-####Make Vim load from `~/.vim/vimrc`:####
-
-```shell
-$ echo "runtime vimrc" > ~/.vimrc
-```
 ###Run Vim to Autoinstall Vundle and plugins###

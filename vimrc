@@ -56,11 +56,21 @@ set incsearch                    " If the terminal is slow, turn this off
 set relativenumber
 set number
 
-set wildmode=list:longest,full   " Completion for wildchar (see help)
 set wildmenu
-set wildignore+=*.o,*.obj,*.pyc,*.pyo,*.pyd,*.class,*.lock
-set wildignore+=*.png,*.gif,*.jpg,*.ico
-set wildignore+=.git,.svn,.hg
+set wildmode=list:longest,full   " Completion for wildchar (see help)
+set wildignore+=.git,.hg,.svn " Version Controls"
+set wildignore+=*.aux,*.out,*.toc "Latex Indermediate files"
+set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg,*.ico "Binary Imgage files"
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest "Compiled Object files"
+set wildignore+=*.spl "Compiled speolling world list"
+set wildignore+=*.sw? "Vim swap files"
+set wildignore+=*.DS_Store "OSX stuff"
+set wildignore+=*.luac "Lua byte code"
+set wildignore+=migrations "Django migrations"
+set wildignore+=*.pyc,*.pyo,*.pyd "Python Object codes"
+set wildignore+=*.orig "Merge resolution files"
+set wildignore+=*.class "java/scala class files"
+set wildignore+=*/target/* "sbt target directory"
 set showcmd                      " display incomplete commands
 
 set showmatch                    " Show the matching bracket
